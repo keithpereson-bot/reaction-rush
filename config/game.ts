@@ -53,3 +53,38 @@ export const SITE = {
   tagline: "Quick games. Real scores. Can you beat yours?",
   url: "https://reactionrush.example.com",
 };
+
+// --- Impossible Color -------------------------------------------------
+// A word is shown in a font color that never matches the word itself
+// (the classic Stroop-effect conflict). The player must tap the swatch
+// matching the INK color, not the word.
+
+export interface ColorOption {
+  name: string;
+  hex: string;
+}
+
+export const COLOR_OPTIONS: ColorOption[] = [
+  { name: "Red", hex: "#ef4444" },
+  { name: "Blue", hex: "#3b82f6" },
+  { name: "Green", hex: "#22c55e" },
+  { name: "Yellow", hex: "#eab308" },
+  { name: "Purple", hex: "#a855f7" },
+  { name: "Orange", hex: "#f97316" },
+];
+
+export const IMPOSSIBLE_COLOR_CONFIG = {
+  ROUND_COUNT: 10,
+  SWATCH_COUNT: 4, // how many color choices shown per round, including the correct one
+  MAX_RESPONSE_MS: 3000, // counted as a miss if the player takes longer than this
+};
+
+export function getAccuracyLabel(correct: number, total: number): string {
+  const pct = total === 0 ? 0 : (correct / total) * 100;
+  if (pct === 100) return "Flawless";
+  if (pct >= 90) return "Excellent";
+  if (pct >= 75) return "Great";
+  if (pct >= 50) return "Good";
+  return "Keep practicing";
+}
+
