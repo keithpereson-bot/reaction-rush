@@ -4,7 +4,8 @@ export function ScoreDisplay({ ms, big = true }: { ms: number; big?: boolean }) 
   return (
     <div className="text-center">
       <div
-        className={`font-display font-bold tracking-tight text-white ${
+        key={ms}
+        className={`animate-score-pop font-display font-bold tracking-tight text-white ${
           big ? "text-6xl sm:text-7xl" : "text-3xl"
         }`}
       >

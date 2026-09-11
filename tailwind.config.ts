@@ -37,11 +37,27 @@ const config: Config = {
           "25%": { transform: "translateX(-6px)" },
           "75%": { transform: "translateX(6px)" },
         },
+        "go-burst": {
+          "0%": { transform: "scale(0.3)", opacity: "0.9" },
+          "100%": { transform: "scale(2.2)", opacity: "0" },
+        },
+        "score-pop": {
+          "0%": { transform: "scale(0.7)", opacity: "0" },
+          "60%": { transform: "scale(1.08)", opacity: "1" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "confetti-fall": {
+          "0%": { transform: "translateY(-10px) rotate(0deg)", opacity: "1" },
+          "100%": { transform: "translateY(140px) rotate(360deg)", opacity: "0" },
+        },
       },
       animation: {
         "pulse-soft": "pulse-soft 1.6s ease-in-out infinite",
         "pop-in": "pop-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
         shake: "shake 0.3s ease-in-out",
+        "go-burst": "go-burst 0.5s ease-out forwards",
+        "score-pop": "score-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        "confetti-fall": "confetti-fall 1.1s ease-in forwards",
       },
     },
   },

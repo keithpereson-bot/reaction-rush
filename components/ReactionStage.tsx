@@ -56,8 +56,14 @@ export function ReactionStage({ state, onInteract, onStart, roundLabel }: Reacti
       type="button"
       onClick={handleClick}
       aria-label={label}
-      className={`w-full select-none rounded-3xl border border-white/5 px-6 py-24 text-center transition-colors duration-150 focus-visible:outline focus-visible:outline-4 focus-visible:outline-accent sm:py-32 md:py-40 ${STAGE_STYLES[state]}`}
+      className={`relative w-full select-none overflow-hidden rounded-3xl border border-white/5 px-6 py-24 text-center transition-colors duration-150 focus-visible:outline focus-visible:outline-4 focus-visible:outline-accent sm:py-32 md:py-40 ${STAGE_STYLES[state]}`}
     >
+      {state === "go" && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 animate-go-burst rounded-full bg-white/40"
+        />
+      )}
       {roundLabel && state !== "result" && (
         <div className="mb-4 text-sm font-medium uppercase tracking-widest text-white/50">
           {roundLabel}

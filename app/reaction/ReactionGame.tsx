@@ -8,7 +8,7 @@ import { REACTION_CONFIG } from "@/config/game";
 import { average, best } from "@/lib/scoring";
 import { getPersonalBest, maybeSetPersonalBest } from "@/lib/storage";
 import { track } from "@/lib/analytics";
-import { playTone, useSoundPreference } from "@/lib/sound";
+import { sfx, useSoundPreference } from "@/lib/sound";
 
 type Mode = "quick" | "five-round";
 
@@ -24,12 +24,19 @@ export function ReactionGame() {
     setPersonalBest(getPersonalBest("reaction"));
   }, []);
 
+  // Sound cues for stage transitions, independent of the result-handling effect below.
+  useEffect(() => {
+    if (!sound.enabled) return;
+    if (state === "go") sfx.go();
+    if (state === "too-soon") sfx.tooSoon();
+  }, [state, sound.enabled]);
+
   // React to a completed round (result state) once per result.
   useEffect(() => {
     if (state !== "result" || resultMs === null) return;
 
     track("game_completed", { ms: resultMs, mode });
-    if (sound.enabled) playTone(660, 120);
+    if (sound.enabled) sfx.resultReveal();
 
     if (mode === "quick") {
       const gotNewBest = maybeSetPersonalBest(resultMs);
@@ -37,7 +44,7 @@ export function ReactionGame() {
       if (gotNewBest) {
         setPersonalBest(resultMs);
         track("personal_best", { ms: resultMs });
-        if (sound.enabled) playTone(880, 160);
+        if (sound.enabled) sfx.personalBest();
       }
     } else {
       setRounds((prev) => {
@@ -52,6 +59,7 @@ export function ReactionGame() {
           if (gotNewBest) {
             setPersonalBest(best(next));
             track("personal_best", { ms: best(next) });
+            if (sound.enabled) sfx.personalBest();
           }
         }
         return next;

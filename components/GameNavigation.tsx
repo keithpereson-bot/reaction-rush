@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE } from "@/config/game";
+import { SoundToggle } from "./SoundToggle";
 
 export function GameNavigation() {
   return (
@@ -18,6 +19,7 @@ export function GameNavigation() {
           <Link href="/leaderboard" className="transition-colors hover:text-white">
             Leaderboard
           </Link>
+          <SoundToggle />
         </div>
       </nav>
     </header>

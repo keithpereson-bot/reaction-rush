@@ -7,6 +7,7 @@ import { getPersonalBest, maybeSetPersonalBest } from "@/lib/storage";
 import { PersonalBest } from "@/components/PersonalBest";
 import { ShareButton } from "@/components/ShareButton";
 import { track } from "@/lib/analytics";
+import { sfx, useSoundPreference } from "@/lib/sound";
 import { average } from "@/lib/scoring";
 
 const GAME_KEY = "impossible-color";
@@ -16,10 +17,17 @@ export function ImpossibleColorGame() {
     useImpossibleColor();
   const [personalBest, setPersonalBest] = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
+  const sound = useSoundPreference();
 
   useEffect(() => {
     setPersonalBest(getPersonalBest(GAME_KEY));
   }, []);
+
+  useEffect(() => {
+    if (state !== "round-result" || !lastOutcome || !sound.enabled) return;
+    if (lastOutcome.correct) sfx.correct();
+    else sfx.incorrect();
+  }, [state, lastOutcome, sound.enabled]);
 
   useEffect(() => {
     if (state !== "finished") return;
@@ -34,6 +42,9 @@ export function ImpossibleColorGame() {
       if (gotNewBest) {
         setPersonalBest(avg);
         track("personal_best", { mode: GAME_KEY, ms: avg });
+        if (sound.enabled) sfx.personalBest();
+      } else if (sound.enabled) {
+        sfx.challengeComplete();
       }
     } else {
       setIsNewBest(false);
@@ -131,7 +142,10 @@ export function ImpossibleColorGame() {
 
       {state === "playing" && round && (
         <>
-          <div className="rounded-3xl border border-white/5 bg-base-800 py-16 text-center sm:py-20">
+          <div
+            key={roundIndex}
+            className="animate-pop-in rounded-3xl border border-white/5 bg-base-800 py-16 text-center sm:py-20"
+          >
             <div
               className="font-display text-5xl font-extrabold tracking-tight sm:text-6xl"
               style={{ color: round.ink.hex }}
@@ -151,7 +165,11 @@ export function ImpossibleColorGame() {
       )}
 
       {state === "round-result" && lastOutcome && (
-        <div className="rounded-3xl border border-white/5 bg-base-800 py-16 text-center sm:py-20">
+        <div
+          className={`animate-pop-in rounded-3xl border border-white/5 py-16 text-center sm:py-20 ${
+            lastOutcome.correct ? "bg-go/10" : "bg-wait/10"
+          }`}
+        >
           <div
             className={`font-display text-4xl font-bold ${
               lastOutcome.correct ? "text-go" : "text-wait"
