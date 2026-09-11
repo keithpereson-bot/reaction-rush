@@ -78,10 +78,14 @@ export default function HomePage() {
             description="A new target every day. Can you beat it?"
             href="/daily"
           />
+          <GameCard
+            title="Impossible Color"
+            description="Say the color, not the word. A fast-paced Stroop test."
+            href="/impossible-color"
+          />
           <GameCard title="Memory" description="Remember the pattern before it disappears." comingSoon />
           <GameCard title="Typing Speed" description="How many words per minute can you type?" comingSoon />
           <GameCard title="Quick Math" description="Solve fast. Think faster." comingSoon />
-          <GameCard title="Impossible Color" description="Say the color, not the word." comingSoon />
         </div>
       </section>
 
