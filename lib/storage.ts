@@ -2,8 +2,14 @@
 // storage, or storage quota errors should never crash the game — they should
 // just mean personal best / daily-challenge progress isn't remembered.
 
-const PERSONAL_BEST_KEY = "rr_personal_best_ms";
+// Legacy key kept as-is so existing players don't lose their reaction-game
+// personal best when this was generalized to support multiple games.
+const LEGACY_REACTION_KEY = "rr_personal_best_ms";
 const DAILY_PROGRESS_PREFIX = "rr_daily_"; // + date key
+
+function personalBestKey(gameKey: string): string {
+  return gameKey === "reaction" ? LEGACY_REACTION_KEY : `rr_personal_best_${gameKey}`;
+}
 
 function isStorageAvailable(): boolean {
   try {
@@ -16,24 +22,27 @@ function isStorageAvailable(): boolean {
   }
 }
 
-export function getPersonalBest(): number | null {
+// gameKey identifies which game's personal best to read/write, e.g.
+// "reaction" or "impossible-color". Lower is always better (milliseconds).
+export function getPersonalBest(gameKey: string = "reaction"): number | null {
   if (typeof window === "undefined" || !isStorageAvailable()) return null;
-  const raw = window.localStorage.getItem(PERSONAL_BEST_KEY);
+  const raw = window.localStorage.getItem(personalBestKey(gameKey));
   if (!raw) return null;
   const parsed = Number(raw);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
 // Returns true if this score is a new personal best.
-export function maybeSetPersonalBest(ms: number): boolean {
+export function maybeSetPersonalBest(ms: number, gameKey: string = "reaction"): boolean {
   if (typeof window === "undefined" || !isStorageAvailable()) return false;
-  const current = getPersonalBest();
+  const current = getPersonalBest(gameKey);
   if (current === null || ms < current) {
-    window.localStorage.setItem(PERSONAL_BEST_KEY, String(ms));
+    window.localStorage.setItem(personalBestKey(gameKey), String(ms));
     return true;
   }
   return false;
 }
+
 
 export interface DailyProgress {
   bestMs: number | null;
