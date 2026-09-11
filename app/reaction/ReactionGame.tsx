@@ -21,7 +21,7 @@ export function ReactionGame() {
   const sound = useSoundPreference();
 
   useEffect(() => {
-    setPersonalBest(getPersonalBest());
+    setPersonalBest(getPersonalBest("reaction"));
   }, []);
 
   // React to a completed round (result state) once per result.
