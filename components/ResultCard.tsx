@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ScoreDisplay } from "./ScoreDisplay";
 import { ShareButton } from "./ShareButton";
 import { PersonalBest } from "./PersonalBest";
@@ -39,6 +40,9 @@ export function ResultCard({ ms, personalBest, isNewBest, onPlayAgain }: ResultC
         <ShareButton ms={ms} variant="challenge" />
         <ShareButton ms={ms} variant="share" />
       </div>
+      <Link href="/stats" className="mt-5 inline-block text-xs text-white/40 underline hover:text-white/70">
+        View your stats
+      </Link>
     </div>
   );
 }

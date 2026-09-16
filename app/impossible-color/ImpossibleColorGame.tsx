@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useImpossibleColor } from "@/games/impossible-color/useImpossibleColor";
 import { IMPOSSIBLE_COLOR_CONFIG, getAccuracyLabel, type ColorOption } from "@/config/game";
 import { getPersonalBest, maybeSetPersonalBest } from "@/lib/storage";
+import { recordHistory } from "@/lib/history";
 import { PersonalBest } from "@/components/PersonalBest";
 import { ShareButton } from "@/components/ShareButton";
 import { track } from "@/lib/analytics";
@@ -24,9 +26,12 @@ export function ImpossibleColorGame() {
   }, []);
 
   useEffect(() => {
-    if (state !== "round-result" || !lastOutcome || !sound.enabled) return;
-    if (lastOutcome.correct) sfx.correct();
-    else sfx.incorrect();
+    if (state !== "round-result" || !lastOutcome) return;
+    recordHistory("color-rounds", { ms: lastOutcome.ms, correct: lastOutcome.correct });
+    if (sound.enabled) {
+      if (lastOutcome.correct) sfx.correct();
+      else sfx.incorrect();
+    }
   }, [state, lastOutcome, sound.enabled]);
 
   useEffect(() => {
@@ -34,6 +39,10 @@ export function ImpossibleColorGame() {
     const correctTimes = outcomes.filter((o) => o.correct).map((o) => o.ms);
     const correctCount = correctTimes.length;
     track("game_completed", { mode: GAME_KEY, correct: correctCount, total: outcomes.length });
+    recordHistory("color-sessions", {
+      accuracyPct: outcomes.length > 0 ? Math.round((correctCount / outcomes.length) * 100) : 0,
+      avgCorrectMs: correctTimes.length > 0 ? average(correctTimes) : 0,
+    });
 
     if (correctCount === outcomes.length && correctTimes.length > 0) {
       const avg = average(correctTimes);
@@ -128,6 +137,9 @@ export function ImpossibleColorGame() {
             </button>
             {avg !== null && <ShareButton ms={avg} variant="share" />}
           </div>
+          <Link href="/stats" className="mt-5 inline-block text-xs text-white/40 underline hover:text-white/70">
+            View your stats
+          </Link>
         </div>
       </div>
     );

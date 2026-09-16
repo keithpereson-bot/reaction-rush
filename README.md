@@ -18,6 +18,7 @@ platform built to grow. **Quick games. Real scores. Can you beat yours?**
   documented seam to plug in a real Supabase backend (`lib/leaderboard.ts`,
   `supabase/schema.sql`).
 - **SEO** — landing page copy, FAQ with JSON-LD, `sitemap.xml`, `robots.txt`, Organization/WebSite structured data, and dynamic Open Graph share images (see below).
+- **Player stats dashboard** (`/stats`) — reaction time trend, 5-Round Challenge session averages, a "where your scores land" distribution chart, and for Impossible Color: accuracy trend and average correct-response time. All computed from a local history log; nothing leaves the device.
 - **Analytics** — Vercel Analytics + Speed Insights (zero-config), with optional Google Analytics 4 support.
 - **Accessibility** — keyboard (spacebar) support, visible focus states,
   semantic buttons, state communicated in text (not color alone), and

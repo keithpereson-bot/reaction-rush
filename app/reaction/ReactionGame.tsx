@@ -7,6 +7,7 @@ import { ResultCard } from "@/components/ResultCard";
 import { REACTION_CONFIG } from "@/config/game";
 import { average, best } from "@/lib/scoring";
 import { getPersonalBest, maybeSetPersonalBest } from "@/lib/storage";
+import { recordHistory } from "@/lib/history";
 import { track } from "@/lib/analytics";
 import { sfx, useSoundPreference } from "@/lib/sound";
 
@@ -36,6 +37,7 @@ export function ReactionGame() {
     if (state !== "result" || resultMs === null) return;
 
     track("game_completed", { ms: resultMs, mode });
+    recordHistory("reaction-rounds", { ms: resultMs, mode: mode === "quick" ? 1 : 2 });
     if (sound.enabled) sfx.resultReveal();
 
     if (mode === "quick") {
@@ -54,6 +56,7 @@ export function ReactionGame() {
             average: average(next),
             best: best(next),
           });
+          recordHistory("reaction-sessions", { avgMs: average(next), bestMs: best(next) });
           const gotNewBest = maybeSetPersonalBest(best(next));
           setIsNewBest(gotNewBest);
           if (gotNewBest) {

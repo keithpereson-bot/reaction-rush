@@ -5,6 +5,7 @@ import { useReactionRound } from "@/games/reaction/useReactionRound";
 import { ReactionStage } from "@/components/ReactionStage";
 import { getTodaysTargetMs, localDateKey } from "@/config/game";
 import { getDailyProgress, recordDailyAttempt, type DailyProgress } from "@/lib/storage";
+import { recordHistory } from "@/lib/history";
 import { track } from "@/lib/analytics";
 
 export function DailyChallenge() {
@@ -29,6 +30,7 @@ export function DailyChallenge() {
     const wasCompleted = progress?.completed ?? false;
     const updated = recordDailyAttempt(dateKey, resultMs, target);
     setProgress(updated);
+    recordHistory("reaction-rounds", { ms: resultMs, mode: 3 });
     track("daily_challenge_started");
     track("game_completed", { ms: resultMs, mode: "daily" });
 

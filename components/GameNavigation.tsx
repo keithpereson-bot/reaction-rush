@@ -19,6 +19,9 @@ export function GameNavigation() {
           <Link href="/leaderboard" className="transition-colors hover:text-white">
             Leaderboard
           </Link>
+          <Link href="/stats" className="transition-colors hover:text-white">
+            Stats
+          </Link>
           <SoundToggle />
         </div>
       </nav>

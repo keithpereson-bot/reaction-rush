@@ -9,9 +9,10 @@ export default function PrivacyPage() {
       <h1 className="font-display text-3xl font-bold text-white">Privacy</h1>
       <div className="mt-6 space-y-4 text-white/70">
         <p>
-          {SITE.name} does not require an account to play. Your personal best and daily
-          challenge progress are stored locally in your browser (localStorage) and are never
-          sent to us.
+          {SITE.name} does not require an account to play. Your personal best, daily
+          challenge progress, and a rolling history of your recent scores (used to power
+          the Stats page) are stored locally in your browser (localStorage) and are never
+          sent to us. You can clear this history at any time from the Stats page.
         </p>
         <p>
           If you choose to submit a score to a global leaderboard, we store an anonymous,
