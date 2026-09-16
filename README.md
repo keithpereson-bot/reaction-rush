@@ -17,7 +17,8 @@ platform built to grow. **Quick games. Real scores. Can you beat yours?**
 - **Leaderboard** — demo data out of the box, clearly labeled as such, with a
   documented seam to plug in a real Supabase backend (`lib/leaderboard.ts`,
   `supabase/schema.sql`).
-- **SEO** — landing page copy, FAQ with JSON-LD, `sitemap.xml`, `robots.txt`.
+- **SEO** — landing page copy, FAQ with JSON-LD, `sitemap.xml`, `robots.txt`, Organization/WebSite structured data, and dynamic Open Graph share images (see below).
+- **Analytics** — Vercel Analytics + Speed Insights (zero-config), with optional Google Analytics 4 support.
 - **Accessibility** — keyboard (spacebar) support, visible focus states,
   semantic buttons, state communicated in text (not color alone), and
   `prefers-reduced-motion` respected.
@@ -81,7 +82,36 @@ Copy `.env.example` to `.env.local` and fill in only what you're using:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | No | Client-side Supabase key for reads. |
 | `SUPABASE_SERVICE_ROLE_KEY` | No | Server-side key for a submission route (see below). Never expose this to the client. |
 
-## Connecting Supabase for a real global leaderboard
+## Growth & analytics tools
+
+**Vercel Analytics + Speed Insights** — enabled automatically, no environment
+variables needed. Once deployed, go to your project on vercel.com and open
+the **Analytics** and **Speed Insights** tabs to see real visitor counts,
+top pages, and Core Web Vitals. (Analytics on the free/Hobby plan shows a
+rolling window of data; Speed Insights works on all plans.)
+
+**Google Analytics 4 (optional)** — set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in
+Vercel's environment variables and redeploy. The `gtag.js` script now loads
+automatically when that variable is present (previously the code referenced
+`gtag` but never loaded the script, so GA silently did nothing — this is
+fixed). All the events listed in "What's here" above forward to GA once
+enabled.
+
+**Dynamic Open Graph share images** — every `/challenge/[ms]` link now
+generates a real branded image showing the actual score, label ("Very
+fast", "Lightning fast", etc.), and a "Can you beat it?" call to action.
+This is what shows up when a challenge link is pasted into iMessage,
+Slack, Twitter/X, or Facebook — previously these links had no preview
+image at all. Test how a link will look before sharing widely using
+Twitter's [Card Validator](https://cards-dev.twitter.com/validator) or
+Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/).
+The homepage has its own static share image at `/opengraph-image`.
+
+**Structured data** — the root layout now includes `WebSite` schema (in
+addition to the homepage's existing FAQ schema), which helps Google
+understand the site and can enable a sitelinks search box in results.
+
+
 
 1. Create a Supabase project.
 2. Run `supabase/schema.sql` in the SQL editor. It creates a `scores` table
