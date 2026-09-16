@@ -83,9 +83,23 @@ export default function HomePage() {
             description="Say the color, not the word. A fast-paced Stroop test."
             href="/impossible-color"
           />
+          <GameCard
+            title="Sudoku"
+            description="Classic number puzzle with three difficulty levels and notes."
+            href="/sudoku"
+          />
+          <GameCard
+            title="Infinity Loop"
+            description="Rotate the tiles to connect every pipe. No loose ends."
+            href="/infinity-loop"
+          />
+          <GameCard
+            title="Chess"
+            description="Play locally with a friend, or against a built-in AI."
+            href="/chess"
+          />
           <GameCard title="Memory" description="Remember the pattern before it disappears." comingSoon />
           <GameCard title="Typing Speed" description="How many words per minute can you type?" comingSoon />
-          <GameCard title="Quick Math" description="Solve fast. Think faster." comingSoon />
         </div>
       </section>
 

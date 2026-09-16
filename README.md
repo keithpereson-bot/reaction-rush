@@ -18,7 +18,9 @@ platform built to grow. **Quick games. Real scores. Can you beat yours?**
   documented seam to plug in a real Supabase backend (`lib/leaderboard.ts`,
   `supabase/schema.sql`).
 - **SEO** — landing page copy, FAQ with JSON-LD, `sitemap.xml`, `robots.txt`, Organization/WebSite structured data, and dynamic Open Graph share images (see below).
-- **Player stats dashboard** (`/stats`) — reaction time trend, 5-Round Challenge session averages, a "where your scores land" distribution chart, and for Impossible Color: accuracy trend and average correct-response time. All computed from a local history log; nothing leaves the device.
+- **Sudoku** — three difficulty levels (Easy/Medium/Hard), pencil notes, live conflict highlighting, keyboard input, per-difficulty personal best solve time. Puzzles are generated fresh each game with a uniqueness check (no puzzle has more than one solution).
+- **Infinity Loop** — rotate tiles to connect every pipe with no dangling ends. Three grid sizes (5×5 / 6×6 / 8×8), each generated from a random spanning tree so every puzzle is solvable and has no isolated pieces. Per-size personal best solve time.
+- **Chess** — full legal move validation, check/checkmate/stalemate detection, pawn promotion, and a move list, powered by the battle-tested `chess.js` library rather than hand-rolled rules (chess has enough edge cases — en passant, castling rights, threefold repetition — that reimplementing it from scratch is a real bug risk). Two modes, switchable per game: local 2-player pass-and-play, or vs. a built-in AI (minimax with alpha-beta pruning, depth 2 — tuned for a responsive "few hundred ms" move rather than a strong but slow engine). Win/loss/draw record vs. the AI is tracked locally.
 - **Analytics** — Vercel Analytics + Speed Insights (zero-config), with optional Google Analytics 4 support.
 - **Accessibility** — keyboard (spacebar) support, visible focus states,
   semantic buttons, state communicated in text (not color alone), and
@@ -33,21 +35,33 @@ platform built to grow. **Quick games. Real scores. Can you beat yours?**
 app/
   page.tsx                 Homepage (hero, game grid, SEO copy, FAQ)
   reaction/                Quick Test + 5 Round Challenge
+  impossible-color/        Stroop-effect color game
+  sudoku/                  Sudoku
+  infinity-loop/           Infinity Loop pipe puzzle
+  chess/                   Chess (local 2-player or vs. AI)
   daily/                   Daily Challenge
   leaderboard/             Leaderboard page (demo or live)
+  stats/                   Player stats dashboard
   challenge/[ms]/          Shareable "beat this score" landing page
   about/ privacy/ terms/   Trust pages
   sitemap.ts robots.ts     SEO plumbing
+  opengraph-image.tsx      Dynamic share images
 components/
   GameNavigation, GameCard, ReactionStage, ScoreDisplay, PersonalBest,
-  ShareButton, ResultCard — reusable across future games
-games/reaction/
-  useReactionRound.ts       Core timing/state engine for reaction-based games
+  ShareButton, ResultCard, SoundToggle, Confetti, StatTile,
+  charts/LineChart, charts/BarChart — reusable across games
+games/
+  reaction/useReactionRound.ts      Reaction timing engine
+  impossible-color/useImpossibleColor.ts
+  sudoku/engine.ts                  Generation, solving, conflict detection
+  infinity-loop/engine.ts           Spanning-tree puzzle generation, rotation
+  chess/ai.ts record.ts             Minimax AI, win/loss/draw tracking
 lib/
-  timing.ts scoring.ts storage.ts analytics.ts leaderboard.ts player.ts sound.ts
+  timing.ts scoring.ts storage.ts history.ts analytics.ts leaderboard.ts
+  player.ts sound.ts
 config/
   game.ts                   All tunable numbers: wait range, round count,
-                             score thresholds, daily targets
+                             score thresholds, daily targets, color game config
 supabase/
   schema.sql                Leaderboard table + RLS policy, ready to run
 ```
